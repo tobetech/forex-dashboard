@@ -8,10 +8,10 @@ interface Props {
 }
 
 const SESSIONS = [
-  { name: 'เช้า', label: '06:00-12:00', hours: [6,7,8,9,10,11] },
-  { name: 'บ่าย', label: '12:00-18:00', hours: [12,13,14,15,16,17] },
-  { name: 'เย็น', label: '18:00-24:00', hours: [18,19,20,21,22,23] },
-  { name: 'ดึก', label: '00:00-06:00', hours: [0,1,2,3,4,5] },
+  { name: 'เช้า', label: '06:00–12:00', hours: [6,7,8,9,10,11] },
+  { name: 'บ่าย', label: '12:00–18:00', hours: [12,13,14,15,16,17] },
+  { name: 'เย็น', label: '18:00–24:00', hours: [18,19,20,21,22,23] },
+  { name: 'ดึก', label: '00:00–06:00', hours: [0,1,2,3,4,5] },
 ]
 
 export default function TradingHours({ trades }: Props) {
@@ -38,15 +38,19 @@ export default function TradingHours({ trades }: Props) {
     })
 
     const maxAbs = Math.max(...Object.values(hourMap).map(h => Math.abs(h.profit)), 1)
+
     return { sessionData, hourMap, maxAbs }
   }, [trades])
 
   return (
     <div className="space-y-4">
+      {/* Session summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {sessionData.map(s => (
           <div key={s.name} className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 border border-gray-200 dark:border-gray-800">
-            <p className="text-xs text-gray-500 dark:text-gray-400">{s.name} <span className="text-gray-300 dark:text-gray-600">{s.label}</span></p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {s.name} <span className="text-gray-300 dark:text-gray-600">{s.label}</span>
+            </p>
             <p className={`text-base font-medium mt-1 ${s.profit >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-orange-500 dark:text-orange-400'}`}>
               {s.profit >= 0 ? '+' : ''}${s.profit.toFixed(2)}
             </p>
@@ -54,6 +58,8 @@ export default function TradingHours({ trades }: Props) {
           </div>
         ))}
       </div>
+
+      {/* Hourly bar */}
       <div>
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">P&L รายชั่วโมง (เวลาไทย)</p>
         <div className="flex items-end gap-0.5 h-16">
@@ -62,8 +68,18 @@ export default function TradingHours({ trades }: Props) {
             const count = hourMap[h]?.count || 0
             const pct = count ? Math.abs(profit) / maxAbs : 0
             return (
-              <div key={h} className="flex-1 flex flex-col justify-end" title={`${h}:00`}>
-                <div className="w-full rounded-sm" style={{ height: `${pct * 56}px`, background: !count ? 'transparent' : profit >= 0 ? '#1D9E75' : '#D85A30' }} />
+              <div
+                key={h}
+                className="flex-1 flex flex-col justify-end"
+                title={`${h}:00 — $${profit.toFixed(2)} (${count} trades)`}
+              >
+                <div
+                  className="w-full rounded-sm"
+                  style={{
+                    height: `${pct * 56}px`,
+                    background: !count ? 'transparent' : profit >= 0 ? '#1D9E75' : '#D85A30',
+                  }}
+                />
               </div>
             )
           })}

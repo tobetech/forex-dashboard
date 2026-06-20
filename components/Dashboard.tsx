@@ -18,8 +18,8 @@ import PnLHeatmap from '@/components/PnLHeatmap'
 import DrawdownChart from '@/components/DrawdownChart'
 import StreakStats from '@/components/StreakStats'
 import BestWorstTrades from '@/components/BestWorstTrades'
+import DailyPnL from '@/components/DailyPnL'
 import TradingHours from '@/components/TradingHours'
-
 
 const PERIODS = [
   { label: '7D', days: 7 },
@@ -314,14 +314,16 @@ export default function Dashboard() {
               <TradingHours trades={closed} />
             </div>
 
-            <div className={card + ' mb-3 sm:mb-4'}>
+            {/* Daily P&L */}
+            <div className={`${card} mb-3 sm:mb-4`}>
               <p className={cardTitle}>
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Average holding time
+                กำไร / ขาดทุน รายวัน
+                <span className="text-gray-300 dark:text-gray-600 ml-1">(คลิกเพื่อดู trades)</span>
               </p>
-              
+              <DailyPnL trades={closed} />
             </div>
 
             {/* Trade history */}
